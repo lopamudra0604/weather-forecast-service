@@ -4,8 +4,8 @@ import ForecastService from "../services/ForecastService"
 
 describe('ForecastService', () => {
     it('should return a forecast for valid London coordinates', async () => {
-        const londonCoords = { latitude: 51.5074, longitude: -0.1278 };
-        const result = await ForecastService.getForecastByCoordinates(londonCoords);
+        const testCoords = { latitude: 37, longitude: -93 };
+        const result = await ForecastService.getForecastByCoordinates(testCoords);
         expect(result).toBeDefined();
         expect(result).toHaveProperty('shortForecast');
         expect(result).toHaveProperty('temperature');
