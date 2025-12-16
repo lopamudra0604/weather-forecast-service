@@ -1,0 +1,166 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Weather Forecast Service API",
+    "version": "1.0.0",
+    "description": "OpenAPI definition for the Weather Forecast Service. Base path uses `/api/{version}` where `{version}` defaults to `v1`."
+  },
+  "servers": [
+    {
+      "url": "/api/{version}",
+      "description": "API base path with version variable",
+      "variables": {
+        "version": {
+          "default": "v1"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/forecast": {
+      "get": {
+        "summary": "Get weather forecast for coordinates",
+        "tags": ["Forecast"],
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "description": "Latitude in decimal degrees"
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "minimum": -180,
+              "maximum": 180
+            },
+            "description": "Longitude in decimal degrees"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful forecast response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ForecastResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": { "$ref": "#/components/schemas/ForecastData" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "required": ["success", "data", "timestamp"]
+      },
+      "ForecastData": {
+        "type": "object",
+        "properties": {
+          "properties": {
+            "type": "object",
+            "properties": {
+              "updated": { "type": "string", "format": "date-time" },
+              "validTimes": { "type": "string" },
+              "elevation": {
+                "type": "object",
+                "properties": {
+                  "value": { "type": "number" },
+                  "unitCode": { "type": "string" }
+                },
+                "required": ["value", "unitCode"]
+              },
+              "periods": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/Period" }
+              }
+            },
+            "required": ["updated", "validTimes", "elevation", "periods"]
+          }
+        },
+        "required": ["properties"]
+      },
+      "Period": {
+        "type": "object",
+        "properties": {
+          "number": { "type": "integer" },
+          "name": { "type": "string" },
+          "startTime": { "type": "string", "format": "date-time" },
+          "endTime": { "type": "string", "format": "date-time" },
+          "isDaytime": { "type": "boolean" },
+          "temperature": { "type": "number" },
+          "temperatureUnit": { "type": "string" },
+          "temperatureTrend": { "type": ["string", "null"] },
+          "windSpeed": { "type": "string" },
+          "windDirection": { "type": "string" },
+          "icon": { "type": "string", "format": "uri" },
+          "shortForecast": { "type": "string" },
+          "detailedForecast": { "type": "string" }
+        },
+        "required": [
+          "number",
+          "name",
+          "startTime",
+          "endTime",
+          "isDaytime",
+          "temperature",
+          "temperatureUnit",
+          "windSpeed",
+          "windDirection",
+          "icon",
+          "shortForecast",
+          "detailedForecast"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "error": { "type": "string" },
+          "statusCode": { "type": "integer" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "required": ["success", "error"]
+      }
+    }
+  }
+}

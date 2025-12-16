@@ -1,4 +1,6 @@
 import express, { Express, Request, Response, NextFunction } from "express";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "@/config/swagger";
 import helmet from "helmet";
 import cors from "cors";
 import { ZodError } from "zod";
@@ -15,9 +17,13 @@ const app: Express = express();
 app.use(helmet());
 app.use(cors());
 
+
 // Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Swagger UI
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Request logging
 app.use(requestLogger);
