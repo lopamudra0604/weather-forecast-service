@@ -3,7 +3,7 @@
 import ForecastService from "../services/ForecastService"
 
 describe('ForecastService', () => {
-    it('should return a forecast for valid London coordinates', async () => {
+    it('should return a forecast for valid US coordinates', async () => {
         const testCoords = { latitude: 37, longitude: -93 };
         const result = await ForecastService.getForecastByCoordinates(testCoords);
         expect(result).toBeDefined();
